@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
-import { Text, View } from "@/components/Themed";
-import Colors from "@/constants/Colors";
+import { Text, View } from "@/src/components/Themed";
+import Colors from "@/src/constants/Colors";
 import { Link } from "expo-router";
 
 export default function TabTwoScreen() {
