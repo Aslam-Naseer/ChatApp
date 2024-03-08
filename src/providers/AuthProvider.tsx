@@ -47,8 +47,17 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     };
 
     fetchSession();
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
+      if (session) {
+        // fetch profile
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
+        setProfile(data || null);
+      }
     });
   }, []);
 
