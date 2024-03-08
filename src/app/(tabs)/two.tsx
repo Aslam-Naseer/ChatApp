@@ -1,16 +1,30 @@
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
 import Colors from "@/src/constants/Colors";
-import { Link } from "expo-router";
+import { Link, Redirect, router } from "expo-router";
+import { useAuth } from "@/src/providers/AuthProvider";
+import { supabase } from "@/src/lib/supabase";
+import { useEffect } from "react";
+import { Router } from "expo-router";
 
 export default function TabTwoScreen() {
+  const { session, profile, loading } = useAuth();
+
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
+  useEffect(() => {
+    if (!session) router.navigate("/login");
+  }, [session]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>johndoe@gmail.com</Text>
-      <Link href="/login" style={styles.textButton}>
-        Sign out
-      </Link>
+      <Text style={styles.title}>{profile?.email || "Hello User"}</Text>
+      <Pressable onPress={() => supabase.auth.signOut()}>
+        <Text style={styles.textButton}>Sign out</Text>
+      </Pressable>
     </View>
   );
 }

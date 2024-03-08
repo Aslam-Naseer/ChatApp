@@ -2,8 +2,14 @@ import { StyleSheet } from "react-native";
 
 import EditScreenInfo from "@/src/components/EditScreenInfo";
 import { Text, View } from "@/src/components/Themed";
+import { useAuth } from "@/src/providers/AuthProvider";
+import { Redirect } from "expo-router";
 
 export default function TabOneScreen() {
+  const { session, profile } = useAuth();
+  console.log(profile);
+  if (!session) return <Redirect href={"/login"} />;
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Chat</Text>
