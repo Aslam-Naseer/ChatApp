@@ -9,14 +9,17 @@ import {
 import React, { useState } from "react";
 import Button from "../components/Button";
 import Colors from "../constants/Colors";
-import { Link, Stack, router } from "expo-router";
+import { Link, Redirect, Stack, router } from "expo-router";
 import { supabase } from "../lib/supabase";
 import { Router } from "expo-router";
+import { useAuth } from "../providers/AuthProvider";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { session } = useAuth();
 
   const loginWithEmail = async () => {
     setLoading(true);
@@ -27,8 +30,8 @@ const SignInScreen = () => {
 
     if (error) Alert.alert(error.message);
 
-    router.navigate("/(tabs)/");
     setLoading(false);
+    router.navigate("/(tabs)/");
   };
 
   if (loading) {
