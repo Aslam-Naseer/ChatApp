@@ -1,4 +1,10 @@
-import { FlatList, StyleSheet, TextInput } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  useColorScheme,
+} from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
 import { useAuth } from "@/src/providers/AuthProvider";
@@ -10,11 +16,13 @@ import {
 } from "@/src/api/messages/create";
 import { useEffect, useState } from "react";
 import Button from "@/src/components/Button";
-import { supabase } from "@/src/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@/src/constants/Colors";
 
 export default function TabOneScreen() {
   const { session } = useAuth();
+  const colorScheme = useColorScheme();
   const { data: fetchedData, isLoading } = useReadMessages();
   const { mutate: sendMsg } = useCreateMessage();
   const [message, setMessage] = useState("");
@@ -23,61 +31,69 @@ export default function TabOneScreen() {
   useMessageSubscription();
 
   const sendMessage = () => {
+    if (!message) return;
     sendMsg(message);
     setMessage("");
   };
 
-  const fetchedMessages = fetchedData?.map((data) => data.msg);
-  console.log(fetchedMessages);
-
   if (!session) return <Redirect href={"/login"} />;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Chat</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <TextInput
-        value={message}
-        onChangeText={setMessage}
-        placeholder="jon@gmail.com"
-        style={styles.input}
-      />
-      <Button text="Send" onPress={sendMessage} disabled={message === ""} />
-      <Text>{fetchedData?.length}</Text>
-      <FlatList
-        data={fetchedMessages}
-        renderItem={({ item }) => <Text>{item}</Text>}
-      />
+    <View style={{ flex: 1 }}>
+      <Text>Hii {fetchedData?.length}</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          value={message}
+          onChangeText={setMessage}
+          style={{
+            ...styles.input,
+            backgroundColor: Colors[colorScheme ?? "light"].inputBackground,
+            color: Colors[colorScheme ?? "dark"].inputColor,
+          }}
+        />
+        <Pressable onPress={sendMessage}>
+          <FontAwesome
+            name="send-o"
+            size={24}
+            style={{
+              backgroundColor: Colors[colorScheme ?? "light"].fontBackground,
+              ...styles.fonticon,
+            }}
+          />
+        </Pressable>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    display: "flex",
+    borderColor: "red",
+    borderWidth: 2,
+    marginHorizontal: 10,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+  inputContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  fonticon: {
+    color: "white",
+    padding: 10,
+    borderRadius: 5,
+    textAlignVertical: "center",
+    margin: 1,
+    height: "95%",
   },
   input: {
     borderWidth: 1,
     borderColor: "gray",
     padding: 10,
-    marginTop: 5,
-    marginBottom: 20,
-    backgroundColor: "white",
     borderRadius: 5,
+    flex: 1,
+    margin: 1,
   },
 });
