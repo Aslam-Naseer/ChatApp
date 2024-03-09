@@ -38,6 +38,10 @@ const SignInScreen = () => {
     return <ActivityIndicator />;
   }
 
+  if (session) {
+    return <Redirect href={"/(tabs)"} />;
+  }
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Login" }} />

@@ -1,6 +1,7 @@
 import { supabase } from "@/src/lib/supabase";
 import { useAuth } from "@/src/providers/AuthProvider";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export const useReadMessages = () => {
   return useQuery({
@@ -10,8 +11,6 @@ export const useReadMessages = () => {
         .from("messages")
         .select("*,sender(email)")
         .limit(50);
-
-      console.log("in create" + data);
 
       if (error) {
         throw error;
@@ -41,4 +40,24 @@ export const useCreateMessage = () => {
       console.log(error);
     },
   });
+};
+
+export const useMessageSubscription = () => {
+  const queryClient = useQueryClient();
+
+  return useEffect(() => {
+    const messages = supabase
+      .channel("msg-channel")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages" },
+        async (payload) => {
+          await queryClient.invalidateQueries({ queryKey: ["messages"] });
+        }
+      )
+      .subscribe();
+    return () => {
+      messages.unsubscribe();
+    };
+  }, []);
 };

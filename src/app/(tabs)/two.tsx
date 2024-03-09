@@ -15,9 +15,9 @@ export default function TabTwoScreen() {
     return <ActivityIndicator />;
   }
 
-  useEffect(() => {
+  setTimeout(() => {
     if (!session) router.navigate("/login");
-  }, [session]);
+  }, 0);
 
   return (
     <View style={styles.container}>

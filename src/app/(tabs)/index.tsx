@@ -1,30 +1,36 @@
-import { StyleSheet, TextInput } from "react-native";
+import { FlatList, StyleSheet, TextInput } from "react-native";
 
-import EditScreenInfo from "@/src/components/EditScreenInfo";
 import { Text, View } from "@/src/components/Themed";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { Redirect } from "expo-router";
-import { useCreateMessage, useReadMessages } from "@/src/api/messages/create";
-import { useState } from "react";
+import {
+  useCreateMessage,
+  useMessageSubscription,
+  useReadMessages,
+} from "@/src/api/messages/create";
+import { useEffect, useState } from "react";
 import Button from "@/src/components/Button";
+import { supabase } from "@/src/lib/supabase";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function TabOneScreen() {
   const { session } = useAuth();
-  const { data: fetchedMessages, isLoading } = useReadMessages();
+  const { data: fetchedData, isLoading } = useReadMessages();
   const { mutate: sendMsg } = useCreateMessage();
   const [message, setMessage] = useState("");
+
+  const queryClient = useQueryClient();
+  useMessageSubscription();
 
   const sendMessage = () => {
     sendMsg(message);
     setMessage("");
   };
 
-  console.log("hii", session?.user.email);
+  const fetchedMessages = fetchedData?.map((data) => data.msg);
   console.log(fetchedMessages);
 
-  setTimeout(() => {
-    if (!session) return <Redirect href={"/login"} />;
-  }, 0);
+  if (!session) return <Redirect href={"/login"} />;
 
   return (
     <View style={styles.container}>
@@ -41,6 +47,11 @@ export default function TabOneScreen() {
         style={styles.input}
       />
       <Button text="Send" onPress={sendMessage} disabled={message === ""} />
+      <Text>{fetchedData?.length}</Text>
+      <FlatList
+        data={fetchedMessages}
+        renderItem={({ item }) => <Text>{item}</Text>}
+      />
     </View>
   );
 }
