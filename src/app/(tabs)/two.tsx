@@ -2,11 +2,9 @@ import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
 
 import { Text, View } from "@/src/components/Themed";
 import Colors from "@/src/constants/Colors";
-import { Link, Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import { useAuth } from "@/src/providers/AuthProvider";
 import { supabase } from "@/src/lib/supabase";
-import { useEffect } from "react";
-import { Router } from "expo-router";
 
 export default function TabTwoScreen() {
   const { session, profile, loading } = useAuth();

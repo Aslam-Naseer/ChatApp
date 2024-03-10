@@ -11,7 +11,6 @@ import Button from "../components/Button";
 import Colors from "../constants/Colors";
 import { Link, Redirect, Stack, router } from "expo-router";
 import { supabase } from "../lib/supabase";
-import { Router } from "expo-router";
 import { useAuth } from "../providers/AuthProvider";
 
 const SignInScreen = () => {

@@ -13,10 +13,8 @@ import {
   useCreateMessage,
   useMessageSubscription,
   useReadMessages,
-} from "@/src/api/messages/create";
-import { useEffect, useState } from "react";
-import Button from "@/src/components/Button";
-import { useQueryClient } from "@tanstack/react-query";
+} from "@/src/api/messages/messages";
+import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
 import MessageBubble from "@/src/components/MessageBubble";
@@ -28,7 +26,6 @@ export default function TabOneScreen() {
   const { mutate: sendMsg } = useCreateMessage();
   const [message, setMessage] = useState("");
 
-  const queryClient = useQueryClient();
   useMessageSubscription();
 
   const sendMessage = () => {
