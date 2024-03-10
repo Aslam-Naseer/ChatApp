@@ -10,6 +10,7 @@ export const useReadMessages = () => {
       const { data, error } = await supabase
         .from("messages")
         .select("*,sender(email)")
+        .order("created_at", { ascending: true })
         .limit(50);
 
       if (error) {
