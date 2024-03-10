@@ -15,6 +15,7 @@ export default {
     inputBackground: inputColorLight,
     inputColor: inputColorDark,
     fontBackground: "#2f95dc",
+    chatBackground: "#f5f5f5",
   },
   dark: {
     text: "#fff",
@@ -26,5 +27,6 @@ export default {
     inputBackground: inputColorDark,
     inputColor: inputColorLight,
     fontBackground: "#25D366",
+    chatBackground: "#000",
   },
 };

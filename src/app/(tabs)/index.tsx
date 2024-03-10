@@ -19,6 +19,7 @@ import Button from "@/src/components/Button";
 import { useQueryClient } from "@tanstack/react-query";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
+import MessageBubble from "@/src/components/MessageBubble";
 
 export default function TabOneScreen() {
   const { session } = useAuth();
@@ -40,7 +41,24 @@ export default function TabOneScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Text>Hii {fetchedData?.length}</Text>
+      <View style={styles.messagesContainer}>
+        <FlatList
+          data={fetchedData}
+          renderItem={(data) => (
+            <MessageBubble
+              message={data.item.msg}
+              sender={data.item.sender}
+              time={data.item.created_at}
+            />
+          )}
+          contentContainerStyle={{
+            gap: 10,
+            backgroundColor: Colors[colorScheme ?? "light"].chatBackground,
+            paddingVertical: 10,
+            paddingHorizontal: 5,
+          }}
+        />
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           value={message}
@@ -72,6 +90,9 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 2,
     marginHorizontal: 10,
+  },
+  messagesContainer: {
+    marginBottom: 50,
   },
   inputContainer: {
     position: "absolute",
